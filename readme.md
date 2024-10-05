@@ -13,3 +13,6 @@ src/
 ├── assets/           # Imágenes y otros recursos estáticos
 ├── environments/     # Configuraciones de ambiente (dev, prod)
 └── styles/           # Archivos SCSS globales
+
+fdfd
+```
