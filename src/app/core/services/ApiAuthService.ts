@@ -4,8 +4,9 @@ import { Injectable } from '@angular/core';
 import { IAuthService } from '../interfaces/IAuthService';
 import { ResponseNotReceivedException } from '../exceptions/ResponseNotReceivedException';
 import { catchError, lastValueFrom, retry, throwError, timeout } from 'rxjs';
-import { i18nTranslateService } from './i18nTranslateService';
+
 import { environment } from '../../../environments/environment';
+import { CustomException } from '../exceptions/CustomException';
 
 //TODO: GENERAL: revisar flujo servicio-componente excepciones, mensajes
 
@@ -15,12 +16,12 @@ import { environment } from '../../../environments/environment';
 })
 export class ApiAuthService implements IAuthService {
   private apiUrl = environment.apiUrl;
-  private authenticated = false;
 
-  constructor(
-    private http: HttpClient,
-    private translateService: i18nTranslateService
-  ) {}
+  //TODO: .ENV approach
+  //TODO: REMOVE TRY/CATCH WITH HANDLE ERROR
+  // TODO: CREATE A SERVICE TO WRAP HTTPCLIENT
+
+  constructor(private http: HttpClient) {}
 
   async login(email: string, password: string): Promise<any> {
     try {
@@ -30,9 +31,7 @@ export class ApiAuthService implements IAuthService {
           .pipe(
             timeout(7000),
             retry(1),
-            catchError((error) => {
-              console.log(error.error.message);
-
+            catchError((error: HttpErrorResponse) => {
               if (error.status === 0) {
                 throw new ResponseNotReceivedException(
                   error.message,
@@ -40,30 +39,26 @@ export class ApiAuthService implements IAuthService {
                 );
               }
 
-              throw new Error(error.error.message);
+              const customMessage =
+                error.error?.message || 'Unknown error occurred';
+
+              throw new CustomException(error.message, customMessage);
             })
           )
       );
 
-      this.authenticated = true;
-
       return response;
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        throw error;
-      }
-
-      throw new Error('Unknown error');
+      throw error;
     }
   }
 
   async logout(): Promise<void> {
     // TODO: Implementar logout
-    this.authenticated = false;
   }
 
   isAuthenticated(): boolean {
     //todo : probably take it from local storage
-    return this.authenticated;
+    return false;
   }
 }

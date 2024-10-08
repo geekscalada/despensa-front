@@ -1,5 +1,5 @@
 export class CustomException extends Error {
-  public readonly customMessage: string | null;
+  public readonly customMessage: string;
 
   constructor(message: string, customMessage: string) {
     super(message);

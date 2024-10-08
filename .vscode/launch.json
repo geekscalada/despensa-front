@@ -6,7 +6,7 @@
       "request": "launch",
       "name": "Ionic/Angular Debug",
       "url": "http://localhost:8100",
-      "webRoot": "${workspaceFolder}/src",
+      "webRoot": "${workspaceFolder}",
       "sourceMaps": true,
       "trace": true,
       "skipFiles": ["node_modules/**/*.js"]

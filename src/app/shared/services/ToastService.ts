@@ -13,8 +13,22 @@ export class ToastService implements IToastService {
     toast.present();
   }
 
-  async simpleToast(opts: ToastOptions) {
-    const toast = await this.toastController.create(opts);
+  async simpleToast(
+    message: string,
+    position: ToastOptions['position'],
+    color: ToastOptions['color']
+  ): Promise<void> {
+    const toastOptions: ToastOptions = {
+      message,
+      duration: 2000,
+      position,
+      translucent: true,
+      animated: true,
+      color,
+      swipeGesture: 'vertical',
+    };
+
+    const toast = await this.toastController.create(toastOptions);
     toast.present();
   }
 }

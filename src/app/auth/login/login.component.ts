@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiAuthService } from '../../core/services/ApiAuthService';
 import { ResponseNotReceivedException } from '../../core/exceptions/ResponseNotReceivedException';
 import { ToastService } from 'src/app/shared/services/ToastService';
-import { ToastOptions } from '@ionic/angular';
+
 import { i18nTranslateService } from 'src/app/core/services/i18nTranslateService';
 import { CustomException } from 'src/app/core/exceptions/CustomException';
 
@@ -27,7 +27,7 @@ export class LoginComponent {
     });
   }
 
-  async onSubmit() {
+  async onSubmit(): Promise<void> {
     if (this.loginForm.valid) {
       try {
         const response = await this.authService.login(
@@ -39,39 +39,23 @@ export class LoginComponent {
 
         // Aquí podrías redirigir al usuario a otra página
       } catch (error) {
-        if (error instanceof CustomException) {
-          if (error.customMessage) {
-            const translatedMessage = this.translateService.translate(
-              error.customMessage
-            );
+        if (error instanceof CustomException && error.customMessage) {
+          const translatedMessage = this.translateService.translate(
+            error.customMessage
+          );
 
-            const toastOptions: ToastOptions = {
-              message: translatedMessage,
-              duration: 2000,
-              position: 'bottom',
-              translucent: true,
-              animated: true,
-              color: 'danger',
-              swipeGesture: 'vertical',
-            };
-
-            this.toastService.presentToast(toastOptions);
-          }
+          return this.toastService.simpleToast(
+            translatedMessage,
+            'bottom',
+            'danger'
+          );
         }
 
-        if (error instanceof Error) {
-          const toastOptions: ToastOptions = {
-            message: error.message,
-            duration: 2000,
-            position: 'bottom',
-            translucent: true,
-            animated: true,
-            color: 'danger',
-            swipeGesture: 'vertical',
-          };
-
-          this.toastService.presentToast(toastOptions);
-        }
+        return this.toastService.simpleToast(
+          'Server error',
+          'bottom',
+          'danger'
+        );
       }
     }
   }
