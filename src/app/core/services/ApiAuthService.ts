@@ -1,42 +1,59 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ResponseLogin } from '../interfaces/auth-tokens.interface'; // Importamos el nuevo tipo
 import { Injectable } from '@angular/core';
 import { IAuthService } from '../interfaces/IAuthService';
 import { ResponseNotReceivedException } from '../exceptions/ResponseNotReceivedException';
-import { timeout } from 'rxjs';
+import { catchError, lastValueFrom, retry, throwError, timeout } from 'rxjs';
+import { i18nTranslateService } from './i18nTranslateService';
+import { environment } from '../../../environments/environment';
+
+//TODO: GENERAL: revisar flujo servicio-componente excepciones, mensajes
 
 //TODO: inyectable in root?
 @Injectable({
   providedIn: 'root',
 })
 export class ApiAuthService implements IAuthService {
-  private apiUrl = 'http://192.168.33.22:3000/api';
+  private apiUrl = environment.apiUrl;
   private authenticated = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private translateService: i18nTranslateService
+  ) {}
 
-  async login(email: string, password: string): Promise<ResponseLogin> {
+  async login(email: string, password: string): Promise<any> {
     try {
-      const response = await this.http
-        .post<ResponseLogin>(`${this.apiUrl}/login`, { email, password })
-        .pipe(timeout(5000))
-        .toPromise();
+      const response = await lastValueFrom(
+        this.http
+          .post<ResponseLogin>(`${this.apiUrl}/login`, { email, password })
+          .pipe(
+            timeout(7000),
+            retry(1),
+            catchError((error) => {
+              console.log(error.error.message);
 
-      if (!response) {
-        //TODO: force to use a key of the messages
-        throw new ResponseNotReceivedException('NO_RESPONSE');
-      }
+              if (error.status === 0) {
+                throw new ResponseNotReceivedException(
+                  error.message,
+                  'NO_RESPONSE'
+                );
+              }
+
+              throw new Error(error.error.message);
+            })
+          )
+      );
 
       this.authenticated = true;
-      console.log('response: ', response);
-      return response;
-    } catch (error) {
-      //TODO: USE MIDDLEWARE OR SIMILAR ?
 
-      if (error instanceof ResponseNotReceivedException) {
-        console.error(error.customMessage);
+      return response;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw error;
       }
-      throw new Error('Login failed, please try again');
+
+      throw new Error('Unknown error');
     }
   }
 

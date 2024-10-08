@@ -2,6 +2,10 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiAuthService } from '../../core/services/ApiAuthService';
 import { ResponseNotReceivedException } from '../../core/exceptions/ResponseNotReceivedException';
+import { ToastService } from 'src/app/shared/services/ToastService';
+import { ToastOptions } from '@ionic/angular';
+import { i18nTranslateService } from 'src/app/core/services/i18nTranslateService';
+import { CustomException } from 'src/app/core/exceptions/CustomException';
 
 @Component({
   selector: 'app-login',
@@ -10,9 +14,13 @@ import { ResponseNotReceivedException } from '../../core/exceptions/ResponseNotR
 })
 export class LoginComponent {
   loginForm: FormGroup;
-  loginError: string | null = null;
 
-  constructor(private fb: FormBuilder, private authService: ApiAuthService) {
+  constructor(
+    private fb: FormBuilder,
+    private authService: ApiAuthService,
+    private toastService: ToastService,
+    private translateService: i18nTranslateService
+  ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -26,20 +34,45 @@ export class LoginComponent {
           this.loginForm.value.email,
           this.loginForm.value.password
         );
+
         console.log('Login successful', response);
-        this.loginError = null;
+
         // Aquí podrías redirigir al usuario a otra página
       } catch (error) {
-        if (error instanceof ResponseNotReceivedException) {
-          this.loginError = error.customMessage; // Mostrar mensaje traducido en el componente
-        } else {
-          this.loginError =
-            'Error durante el login, por favor intente de nuevo.';
+        if (error instanceof CustomException) {
+          if (error.customMessage) {
+            const translatedMessage = this.translateService.translate(
+              error.customMessage
+            );
+
+            const toastOptions: ToastOptions = {
+              message: translatedMessage,
+              duration: 2000,
+              position: 'bottom',
+              translucent: true,
+              animated: true,
+              color: 'danger',
+              swipeGesture: 'vertical',
+            };
+
+            this.toastService.presentToast(toastOptions);
+          }
+        }
+
+        if (error instanceof Error) {
+          const toastOptions: ToastOptions = {
+            message: error.message,
+            duration: 2000,
+            position: 'bottom',
+            translucent: true,
+            animated: true,
+            color: 'danger',
+            swipeGesture: 'vertical',
+          };
+
+          this.toastService.presentToast(toastOptions);
         }
       }
-    } else {
-      console.log('Invalid Form');
-      this.loginError = 'Por favor complete todos los campos correctamente.';
     }
   }
 }
