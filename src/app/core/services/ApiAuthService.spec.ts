@@ -8,11 +8,15 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ApiAuthService } from './ApiAuthService';
 import { ResponseNotReceivedException } from '../exceptions/ResponseNotReceivedException';
 import { CustomException } from '../exceptions/CustomException';
+import { environment } from '../../../environments/environment';
 
 describe('MyAuthService', () => {
   let service: ApiAuthService;
   let httpMock: HttpTestingController;
   let httpClient: HttpClient;
+
+  const noResponseMessage = environment.noResponseMessage;
+  const unknownErrorMessage = environment.unknownErrorMessage;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -49,6 +53,9 @@ describe('MyAuthService', () => {
       fail('Expected ResponseNotReceivedException to be thrown');
     } catch (error) {
       expect(error).toBeInstanceOf(ResponseNotReceivedException);
+      if (error instanceof ResponseNotReceivedException) {
+        expect(error.customMessage).toEqual(noResponseMessage);
+      }
     }
   });
 
@@ -82,7 +89,7 @@ describe('MyAuthService', () => {
       throw new Error('Expected HttpErrorResponse to be thrown');
     } catch (error: any) {
       expect(error.message).toEqual(unknownError.message);
-      expect(error.customMessage).toEqual('Unknown error occurred');
+      expect(error.customMessage).toEqual(unknownErrorMessage);
     }
   });
 
@@ -95,7 +102,7 @@ describe('MyAuthService', () => {
       // Si no lanza excepción, fallamos el test
       throw new Error('Expected HttpErrorResponse to be thrown');
     } catch (error: any) {
-      expect(error.customMessage).toEqual('Unknown error occurred');
+      expect(error.customMessage).toEqual(unknownErrorMessage);
     }
   });
 });

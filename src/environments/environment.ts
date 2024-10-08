@@ -7,6 +7,10 @@ export const environment = {
   apiUrl: 'http://192.168.33.22:3000/api',
   defaultLanguage: 'es',
   supportedLanguages: ['en', 'es'],
+  serverTimeout: 7000,
+  retryAgain: 1,
+  noResponseMessage: 'NO_RESPONSE',
+  unknownErrorMessage: 'Unknown error occurred',
 };
 
 /*
