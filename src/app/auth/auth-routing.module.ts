@@ -5,7 +5,19 @@ import { LoginComponent } from './login/login.component'; // Asegúrate de impor
 // TODO: Add AuthGuard?
 // Ruta /auth/login
 const routes: Routes = [
-  { path: 'login', component: LoginComponent }, // Ruta para el formulario de login
+  {
+    path: '',
+    children: [
+      {
+        path: 'login',
+        component: LoginComponent,
+      },
+      {
+        path: 'register',
+        component: LoginComponent,
+      },
+    ],
+  },
 ];
 
 @NgModule({

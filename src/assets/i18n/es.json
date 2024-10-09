@@ -1,5 +1,6 @@
 {
   "HELLO": "Hola",
   "WELCOME": "¡Bienvenido a la aplicación!",
-  "NO_RESPONSE": "No se ha recibido respuesta del servidor"
+  "RESPONSE_NOT_RECEIVED": "No se ha recibido respuesta del servidor",
+  "INVALID_CREDENTIALS": "Usuario o contraseña incorrecta"
 }
