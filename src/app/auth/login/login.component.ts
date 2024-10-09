@@ -15,6 +15,7 @@ import { CustomException } from 'src/app/core/exceptions/CustomException';
 export class LoginComponent {
   loginForm: FormGroup;
 
+  //TODO: add validations messages
   constructor(
     private fb: FormBuilder,
     private authService: ApiAuthService,
@@ -36,8 +37,6 @@ export class LoginComponent {
         );
 
         console.log('Login successful', response);
-
-        // Aquí podrías redirigir al usuario a otra página
       } catch (error) {
         if (error instanceof CustomException && error.customMessage) {
           const translatedMessage = this.translateService.translate(

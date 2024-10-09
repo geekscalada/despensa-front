@@ -7,6 +7,7 @@ import { catchError, lastValueFrom, retry, throwError, timeout } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { CustomException } from '../exceptions/CustomException';
+import { HttpService } from '../../shared/services/HttpService';
 
 //TODO: GENERAL: revisar flujo servicio-componente excepciones, mensajes
 
@@ -17,38 +18,17 @@ import { CustomException } from '../exceptions/CustomException';
 export class ApiAuthService implements IAuthService {
   private apiUrl = environment.apiUrl;
 
-  //TODO: .ENV approach
-  //TODO: REMOVE TRY/CATCH WITH HANDLE ERROR
-  // TODO: CREATE A SERVICE TO WRAP HTTPCLIENT
-
-  constructor(private http: HttpClient) {}
+  constructor(private httpService: HttpService) {}
 
   async login(email: string, password: string): Promise<any> {
     try {
-      const response = await lastValueFrom(
-        this.http
-          .post<ResponseLogin>(`${this.apiUrl}/login`, { email, password })
-          .pipe(
-            timeout(7000),
-            retry(1),
-            catchError((error: HttpErrorResponse) => {
-              if (error.status === 0) {
-                throw new ResponseNotReceivedException(
-                  error.message,
-                  'NO_RESPONSE'
-                );
-              }
-
-              const customMessage =
-                error.error?.message || 'Unknown error occurred';
-
-              throw new CustomException(error.message, customMessage);
-            })
-          )
+      const response = await this.httpService.post<ResponseLogin>(
+        `${this.apiUrl}/login`,
+        { email, password }
       );
 
       return response;
-    } catch (error: unknown) {
+    } catch (error) {
       throw error;
     }
   }

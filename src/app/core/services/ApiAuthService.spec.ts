@@ -9,14 +9,15 @@ import { ApiAuthService } from './ApiAuthService';
 import { ResponseNotReceivedException } from '../exceptions/ResponseNotReceivedException';
 import { CustomException } from '../exceptions/CustomException';
 import { environment } from '../../../environments/environment';
+import { ErrorMessages } from '../../core/exceptions/CustomException';
 
 describe('MyAuthService', () => {
   let service: ApiAuthService;
   let httpMock: HttpTestingController;
   let httpClient: HttpClient;
 
-  const noResponseMessage = environment.noResponseMessage;
-  const unknownErrorMessage = environment.unknownErrorMessage;
+  const noResponseMessage = ErrorMessages.RESPONSE_NOT_RECEIVED;
+  const unknownErrorMessage = ErrorMessages.UNKNOWN_ERROR;
 
   beforeEach(() => {
     TestBed.configureTestingModule({

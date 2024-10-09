@@ -1,9 +1,9 @@
-import { CustomException } from './CustomException';
+import { CustomException, ErrorMessages } from './CustomException';
 
-export class ResponseNotReceivedException extends CustomException {
+export class ResponseNotReceivedException extends CustomException<ErrorMessages> {
   constructor(
     message: string,
-    customMessage: string = 'Response not received'
+    customMessage: ErrorMessages = ErrorMessages.RESPONSE_NOT_RECEIVED
   ) {
     super(message, customMessage);
   }
