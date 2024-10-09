@@ -4,9 +4,13 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 //todo: this is the way of doing it with lazy loading
 const routes: Routes = [
   {
-    path: 'home',
-    loadChildren: () =>
-      import('./home/home.module').then((m) => m.HomePageModule),
+    path: '',
+    redirectTo: '',
+    pathMatch: 'full',
+  },
+  {
+    path: '',
+    loadChildren: () => import('./home/home.module').then((m) => m.HomeModule),
   },
   {
     //todo: how to do without lazy loading?
@@ -14,9 +18,8 @@ const routes: Routes = [
     loadChildren: () => import('./auth/auth.module').then((m) => m.AuthModule),
   },
   {
-    path: '',
-    redirectTo: 'home',
-    pathMatch: 'full',
+    path: '**',
+    redirectTo: '',
   },
 ];
 

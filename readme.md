@@ -14,3 +14,14 @@ src/
 ├── environments/     # Configuraciones de ambiente (dev, prod)
 └── styles/           # Archivos SCSS globales
 ```
+
+## Examples of commands:
+
+```bash
+# Generate a new module
+ng generate module pages/tabs --routing
+ng generate component home/home
+
+
+
+```

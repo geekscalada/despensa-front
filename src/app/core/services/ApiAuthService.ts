@@ -20,7 +20,7 @@ export class ApiAuthService implements IAuthService {
 
   constructor(private httpService: HttpService) {}
 
-  async login(email: string, password: string): Promise<any> {
+  async login(email: string, password: string): Promise<ResponseLogin> {
     try {
       const response = await this.httpService.post<ResponseLogin>(
         `${this.apiUrl}/login`,
