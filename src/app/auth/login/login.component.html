@@ -20,5 +20,11 @@
     </ion-list>
 
     <ion-button expand="full" type="submit">Login</ion-button>
+
+    <ion-button expand="full" (click)="goProtectedRoute()"
+      >Go to protected route</ion-button
+    >
+
+    <ion-button expand="full" (click)="logout()">Logout</ion-button>
   </form>
 </ion-content>

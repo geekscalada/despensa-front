@@ -6,6 +6,7 @@ import { ToastService } from 'src/app/shared/services/ToastService';
 
 import { i18nTranslateService } from 'src/app/core/services/i18nTranslateService';
 import { CustomException } from 'src/app/core/exceptions/CustomException';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -20,7 +21,8 @@ export class LoginComponent {
     private fb: FormBuilder,
     private authService: ApiAuthService,
     private toastService: ToastService,
-    private translateService: i18nTranslateService
+    private translateService: i18nTranslateService,
+    private route: Router
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -57,5 +59,14 @@ export class LoginComponent {
         );
       }
     }
+  }
+
+  async goProtectedRoute(): Promise<void> {
+    console.log('Go to protected route');
+    this.route.navigate(['/library']);
+  }
+
+  async logout(): Promise<void> {
+    this.authService.logout();
   }
 }

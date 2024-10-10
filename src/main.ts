@@ -6,4 +6,8 @@ platformBrowserDynamic()
   .bootstrapModule(AppModule)
   .catch((err) => console.log(err));
 
-//TODO: tabs should share all components excep login and register!
+// TODO: INTERCEPTOR AND MANAGE REFRESH TOKEN
+// TODO: STYLES
+// TODO: side menu
+// TODO: check why we need to import IonicModule on every module
+// TODO: tabs should share all components excep login and register!
