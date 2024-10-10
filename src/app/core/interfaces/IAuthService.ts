@@ -1,4 +1,4 @@
-import { ResponseLogin } from './auth-tokens.interface';
+import { ResponseLogin } from './AuthTypes';
 
 export interface IAuthService {
   login(email: string, password: string): Promise<ResponseLogin>;

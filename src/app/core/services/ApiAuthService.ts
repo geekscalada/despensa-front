@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { ResponseLogin } from '../interfaces/auth-tokens.interface'; // Importamos el nuevo tipo
+import { LocalStorageKeys, ResponseLogin } from '../interfaces/AuthTypes'; // Importamos el nuevo tipo
 import { Injectable } from '@angular/core';
 import { IAuthService } from '../interfaces/IAuthService';
 import { ResponseNotReceivedException } from '../exceptions/ResponseNotReceivedException';
@@ -8,17 +8,15 @@ import { catchError, lastValueFrom, retry, throwError, timeout } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { CustomException } from '../exceptions/CustomException';
 import { HttpService } from '../../shared/services/HttpService';
+import { Router } from '@angular/router';
 
-//TODO: GENERAL: revisar flujo servicio-componente excepciones, mensajes
-
-//TODO: inyectable in root?
 @Injectable({
   providedIn: 'root',
 })
 export class ApiAuthService implements IAuthService {
   private apiUrl = environment.apiUrl;
 
-  constructor(private httpService: HttpService) {}
+  constructor(private httpService: HttpService, private router: Router) {}
 
   async login(email: string, password: string): Promise<ResponseLogin> {
     try {
@@ -27,6 +25,8 @@ export class ApiAuthService implements IAuthService {
         { email, password }
       );
 
+      localStorage.setItem(LocalStorageKeys.accessToken, response.accessToken);
+
       return response;
     } catch (error) {
       throw error;
@@ -34,11 +34,11 @@ export class ApiAuthService implements IAuthService {
   }
 
   async logout(): Promise<void> {
-    // TODO: Implementar logout
+    localStorage.removeItem(LocalStorageKeys.accessToken);
+    this.router.navigate(['/auth/login']);
   }
 
   isAuthenticated(): boolean {
-    //todo : probably take it from local storage
-    return false;
+    return !!localStorage.getItem(LocalStorageKeys.accessToken);
   }
 }
