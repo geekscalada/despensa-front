@@ -10,10 +10,10 @@ export class NoAuthGuard implements CanActivate {
 
   canActivate(): boolean {
     if (this.authService.isAuthenticated()) {
-      this.router.navigate(['/library']); // Usuario autenticado, redirigir a otra página
+      this.router.navigate(['/library']);
       return false;
     } else {
-      return true; // No autenticado, permitir acceso a la página de login
+      return true;
     }
   }
 }

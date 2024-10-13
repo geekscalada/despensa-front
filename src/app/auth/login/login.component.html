@@ -11,15 +11,27 @@
       <ion-item>
         <ion-label position="floating">Email</ion-label>
         <ion-input formControlName="email" type="email"></ion-input>
+        <!-- Mensajes de validación para el campo de email -->
+        <div *ngIf="validationMessages['email']">
+          <ion-text color="danger">{{ validationMessages["email"] }}</ion-text>
+        </div>
       </ion-item>
 
       <ion-item>
         <ion-label position="floating">Password</ion-label>
         <ion-input formControlName="password" type="password"></ion-input>
+        <!-- Mensajes de validación para el campo de email -->
+        <div *ngIf="validationMessages['password']">
+          <ion-text color="danger">{{
+            validationMessages["password"]
+          }}</ion-text>
+        </div>
       </ion-item>
     </ion-list>
 
-    <ion-button expand="full" type="submit">Login</ion-button>
+    <ion-button expand="full" type="submit" [disabled]="!loginForm.valid"
+      >Login</ion-button
+    >
 
     <ion-button expand="full" (click)="goProtectedRoute()"
       >Go to protected route</ion-button
