@@ -1,43 +1,66 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { LocalStorageKeys, ResponseLogin } from '../interfaces/AuthTypes'; // Importamos el nuevo tipo
 import { Injectable } from '@angular/core';
 import { IAuthService } from '../interfaces/IAuthService';
-import { ResponseNotReceivedException } from '../exceptions/ResponseNotReceivedException';
-import { catchError, lastValueFrom, retry, throwError, timeout } from 'rxjs';
-
 import { environment } from '../../../environments/environment';
-import { CustomException } from '../exceptions/CustomException';
 import { HttpService } from '../../shared/services/HttpService';
-import { Router } from '@angular/router';
+import { Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
-})
-export class ApiAuthService implements IAuthService {
+}) //TODO: implements IAuthService
+export class ApiAuthService {
   private apiUrl = environment.apiUrl;
 
-  constructor(private httpService: HttpService, private router: Router) {}
+  constructor(private httpService: HttpService) {}
 
-  async login(email: string, password: string): Promise<ResponseLogin> {
-    try {
-      const response = await this.httpService.post<ResponseLogin>(
+  // Actualizamos para usar Observables en lugar de Promises
+  login(email: string, password: string): Observable<ResponseLogin> {
+    return this.httpService
+      .post<ResponseLogin>(
         `${this.apiUrl}/login`,
-        { email, password }
+        { email, password },
+        {
+          withCredentials: true,
+        }
+      )
+      .pipe(
+        tap((response) => {
+          // Guardamos el access token en localStorage
+          localStorage.setItem(
+            LocalStorageKeys.accessToken,
+            response.accessToken
+          );
+        })
       );
-
-      localStorage.setItem(LocalStorageKeys.accessToken, response.accessToken);
-
-      return response;
-    } catch (error) {
-      throw error;
-    }
   }
 
-  async logout(): Promise<void> {
+  // Actualizamos el refreshToken para usar Observables
+  refreshToken(): Observable<{ accessToken: string }> {
+    return this.httpService
+      .post<{ accessToken: string }>(
+        `${this.apiUrl}/refresh-token`,
+        {},
+        {
+          withCredentials: true,
+        }
+      )
+      .pipe(
+        tap((response) => {
+          // Guardamos el nuevo access token en localStorage
+          localStorage.setItem(
+            LocalStorageKeys.accessToken,
+            response.accessToken
+          );
+        })
+      );
+  }
+
+  // Método logout se mantiene igual
+  logout(): void {
     localStorage.removeItem(LocalStorageKeys.accessToken);
-    this.router.navigate(['/auth/login']);
   }
 
+  // Método isAuthenticated se mantiene igual
   isAuthenticated(): boolean {
     return !!localStorage.getItem(LocalStorageKeys.accessToken);
   }
