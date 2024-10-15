@@ -20,7 +20,6 @@ export class LoginComponent implements OnInit {
 
   private apiUrl = environment.apiUrl;
 
-  //TODO: add validations messages
   constructor(
     private fb: FormBuilder,
     private authService: ApiAuthService,
@@ -30,8 +29,6 @@ export class LoginComponent implements OnInit {
     private httpService: HttpService
   ) {}
 
-  // TODO: Do this as a service, and do this iterating just the first error of each field
-  //TODO: improve this to show validation messages when we are jumping from one field to another
   public setValidationMessages() {
     console.log('Setting validation messages');
     const controls = this.loginForm.controls;

@@ -12,12 +12,10 @@ const routes: Routes = [
   {
     path: '',
     loadChildren: () => import('./home/home.module').then((m) => m.HomeModule),
-    canActivate: [AuthGuard],
   },
   {
     path: 'auth', // Lazy loading para el módulo de autenticación /auth/login
     loadChildren: () => import('./auth/auth.module').then((m) => m.AuthModule),
-    canActivate: [NoAuthGuard],
   },
   {
     path: '**',

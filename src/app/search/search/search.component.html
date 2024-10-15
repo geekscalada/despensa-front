@@ -1,3 +1,8 @@
-<p>
-  search works!
-</p>
+<div>
+  <button ion-button>Add Dynamic Card</button>
+</div>
+
+<ion-button (click)="addCard()"> Add Dynamic Card </ion-button>
+
+<!-- Aquí se inyectará el componente dinámicamente -->
+<div #cardContainer></div>

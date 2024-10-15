@@ -36,7 +36,6 @@ interface PostJSONRequestOptions {
 @Injectable({
   providedIn: 'root',
 })
-//TODO: implement the interface
 export class HttpService {
   private serverTimeout = environment.serverTimeout;
   private retryAgain = environment.retryAgain;

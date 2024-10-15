@@ -7,7 +7,7 @@ import { Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
-}) //TODO: implements IAuthService
+})
 export class ApiAuthService {
   private apiUrl = environment.apiUrl;
 

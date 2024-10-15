@@ -32,7 +32,6 @@ export class i18nTranslateService implements ITranslateService {
   translate(key: string, params?: any): string {
     const translation = this.translateService.instant(key, params);
     if (translation === key) {
-      // TODO: implement loggers
       console.log(`Translation not found for key: ${key}`);
     }
 

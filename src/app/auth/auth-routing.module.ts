@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component'; // Asegúrate de importar el componente
 
-// TODO: Add AuthGuard?
 // Ruta /auth/login
 const routes: Routes = [
   {

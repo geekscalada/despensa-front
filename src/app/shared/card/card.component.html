@@ -1,0 +1,18 @@
+<!-- TODO: ExplicacionAqui -->
+
+<div class="card" appHighlight>
+  <h3>{{ title | capitalize }}</h3>
+  <p>{{ description }}</p>
+  <ion-button (click)="onClick()">Click me!</ion-button>
+</div>
+
+<div
+  class="card"
+  appDynamicBehavior
+  [highlightColor]="'red'"
+  [clickMessage]="'Ha sido clickada!'"
+>
+  <h3>{{ title }}</h3>
+  <p>{{ description }}</p>
+  <button (click)="onClick()">Click me!</button>
+</div>

@@ -29,8 +29,6 @@ describe('MyAuthService', () => {
     httpClient = TestBed.inject(HttpClient);
   });
 
-  //TODO: use motherObjects
-
   afterEach(() => {
     httpMock.verify();
   });
